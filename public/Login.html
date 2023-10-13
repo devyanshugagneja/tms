@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOGIN</title>
+    <link rel="stylesheet" href="Login.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="box1">
+            <h1>Login</h1>
+            <form id="login-form">
+                <div class="text">
+                    <input type="text" placeholder="Email" id="email-input" required>
+                    <span></span>
+                </div>
+                <div class="text">
+                    <input type="password" placeholder="Password" id="password-input" required>
+                    <span></span>
+                </div>
+                <button type="submit" class="login">Submit</button>
+            </form>
+        </div>
+        <div class="box" id="box2">
+            <img src="img3.png" alt="error">
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1pTAijXc-6R2SewPxKEgmJzVsE6Y-KC4",
+  authDomain: "gyankalash-dbbdf.firebaseapp.com",
+  projectId: "gyankalash-dbbdf",
+  storageBucket: "gyankalash-dbbdf.appspot.com",
+  messagingSenderId: "950711044542",
+  appId: "1:950711044542:web:ab4ffcd60e99cbacf711ef",
+  measurementId: "G-SZ2FJ0S5L6"
+};
+
+        firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to the login form and its inputs
+        const loginForm = document.getElementById("login-form");
+        const emailInput = document.getElementById("email-input");
+        const passwordInput = document.getElementById("password-input");
+
+        // Add a listener to the login form to handle form submissions
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get the email and password values from the form inputs
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            // Use Firebase authentication to sign in the user with email and password
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // User is signed in
+                    const user = userCredential.user;
+                    console.log("User signed in:", user);
+                    window.location.href = "adminInfo.html"; // Redirect to adminInfo.html
+                })
+                .catch((error) => {
+                    // Handle sign-in errors
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error("Sign-in error:", errorCode, errorMessage);
+                    alert(errorMessage);
+                });
+        });
+    </script>
+</body>
+
+</html>

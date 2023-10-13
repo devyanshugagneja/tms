@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="adminInfo.css" />
+  <title>Transport Management System</title>
+</head>
+
+<body>
+  <div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="adminInfo.html" class="navText">My Info</a>
+		<a href="AllStudents.html" class="navText">All Students</a>
+		<a href="BusNumber.html" class="navText">Add Bus</a>
+		<a href="ChangePassword.html" class="navText">Change Password</a>
+		<a href="#" class="navText" onclick="logout()">Log Out</a>
+  </div>
+  <div class="top">
+    <div class="image header">
+      <img src="GIS Logo.png" alt="" onclick="openNav()" height="143px" width="140px" />
+    </div>
+    <div class="header welcomeText">
+      <div class="adminHeading">
+        <h2>Welcome, Admin!</h2>
+      </div>
+      <input type="text" placeholder="Search Here" width="100%" class="search" />
+    </div>
+  </div>
+  <div>
+    <h3 class="infoText">ADMIN INFORMATION</h3>
+  </div>
+  <div class="admin">
+    <div class="adminContent">
+      <img src="sampleStudent.jpg" alt="" class="student" />
+      <div class="adminDetails">
+        <p><b class="InputAdmin">Name:</b><span class="OutputAdmin" id="adminName"></span></p>
+        <p><b class="InputAdmin">Gender:</b><span class="OutputAdmin" id="adminGender"></span></p>
+        <p><b class="InputAdmin">Date of birth:</b><span class="OutputAdmin" id="adminDOB"></span></p>
+        <p><b class="InputAdmin">Email:</b><span class="OutputAdmin" id="adminEmail"></span></p>
+        <p><b class="InputAdmin">Phone number:</b><span class="OutputAdmin" id="adminPhone"></span></p>
+        <p><b class="InputAdmin">Cabin Number:</b><span class="OutputAdmin" id="adminCabin"></span></p>
+        <a href="editAdminInfo.html">
+          <div class="editClass">
+            <img src="edit_icon.png" alt="" height="50px" width="50px" />
+          </div>
+          <div class="editClass">
+            <span class="edit">Edit Information</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1pTAijXc-6R2SewPxKEgmJzVsE6Y-KC4",
+  authDomain: "gyankalash-dbbdf.firebaseapp.com",
+  projectId: "gyankalash-dbbdf",
+  storageBucket: "gyankalash-dbbdf.appspot.com",
+  messagingSenderId: "950711044542",
+  appId: "1:950711044542:web:ab4ffcd60e99cbacf711ef",
+  measurementId: "G-SZ2FJ0S5L6"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Fetch the admin information from the database
+    var adminRef = firebase.database().ref('admin');
+
+    adminRef.on('value', function(snapshot) {
+      var adminData = snapshot.val();
+
+      // Update the HTML elements with the retrieved admin information
+      document.getElementById('adminName').textContent = adminData.name;
+      document.getElementById('adminGender').textContent = adminData.gender;
+      document.getElementById('adminDOB').textContent = adminData.dateOfBirth;
+      document.getElementById('adminEmail').textContent = adminData.email;
+      document.getElementById('adminPhone').textContent = adminData.phoneNumber;
+      document.getElementById('adminCabin').textContent = adminData.cabinNumber;
+    });
+  </script>
+
+  <script>
+    function logout() {
+      firebase.auth().signOut()
+        .then(function () {
+          // Sign out successful
+          alert("Logged out successfully!");
+          // Redirect to the login page or desired location
+          window.location.href = "login.html";
+        })
+        .catch(function (error) {
+          // Handle logout error
+          alert("Error logging out: " + error.message);
+        });
+    }
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+  </script>
+</body>
+
+</html>

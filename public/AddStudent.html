@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transport Management System</title>
+	<link rel="stylesheet" href="AddStudent.css">
+</head>
+
+<body>
+	<div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="adminInfo.html" class="navText">My Info</a>
+		<a href="AllStudents.html" class="navText">All Students</a>
+		<a href="BusNumber.html" class="navText">Add Bus</a>
+		<a href="ChangePassword.html" class="navText">Change Password</a>
+		<a href="#" class="navText" onclick="logout()">Log Out</a>
+
+	</div>
+	<div class="top">
+		<div class="image header">
+			<img src="GIS Logo.png" alt="" onclick="openNav()" height="143px" width="140px" />
+		</div>
+		<div class="header welcomeText">
+			<div class="adminHeading">
+				<h2>Welcome , Admin !</h2>
+			</div>
+			<input type="text" placeholder="Search Here" width="100%" class="search" />
+		</div>
+	</div>
+	<h3>Add Student</h3>
+	<div class="addST">
+		<form method="POST" action="submit-form.php" enctype="multipart/form-data">
+			<div class="form-container">
+				<div class="left">
+					<label for="name">Name<span class="required"></span></label>
+					<input type="text" id="name" name="name" required>
+
+
+					<label for="father_name">Father's Name<span class="required"></span></label>
+					<input type="text" id="father_name" name="father_name" required>
+
+
+					<label for="phone">Phone Number<span class="required"></span></label>
+					<input type="tel" id="phone" name="phone" required>
+					<label for="admission_number">Admission Number<span class="required"></span></label>
+					<input type="text" id="admission_number" name="admission_number" required>
+					<label for="fees_paid">Total Fees <span class="required"></span></label>
+					<input type="text" id="total_fees" name="total_fees" required>
+					<label for="class">Class<span class="required"></span></label>
+					<input type="text" id="class" name="class" required>
+				</div>
+
+				<div class="right">
+
+
+
+
+					<label for="bus_number">Bus Number<span class="required"></span></label>
+					<select id="bus_number" name="bus_number" required>
+					  <option value="">Select Bus Number</option>
+					</select>
+
+					<label for="bus_route">Bus Route<span class="required"></span></label>
+					<input type="text" id="bus_route" name="bus_route" required>
+					
+					<label for="fees_paid">Fess Paid<span class="required"></span></label>
+					<input type="text" id="fees_paid" name="fees_paid" required>
+					<label for="fees_due">Fees Due<span class="required"></span></label>
+					<input type="text" id="fees_due" name="fees_due" required>
+					<label for="due_date">Due date<span class="required"></span></label>
+					<input type="date" id="due_date" name="due_date" required>
+					<label for="month">Months<span></span></label>
+					<input type="text" id="month" name="month" >
+
+
+
+				</div>
+
+			</div>
+			<button type="submit" class="submit">Submit</button>
+		</form>
+		<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+		<script>
+			const firebaseConfig = {
+				apiKey: "AIzaSyB1pTAijXc-6R2SewPxKEgmJzVsE6Y-KC4",
+				authDomain: "gyankalash-dbbdf.firebaseapp.com",
+				projectId: "gyankalash-dbbdf",
+				storageBucket: "gyankalash-dbbdf.appspot.com",
+				messagingSenderId: "950711044542",
+				appId: "1:950711044542:web:ab4ffcd60e99cbacf711ef",
+				measurementId: "G-SZ2FJ0S5L6"
+			};
+
+			firebase.initializeApp(firebaseConfig);
+
+			const database = firebase.database();
+
+			function addStudent(event) {
+				event.preventDefault(); 
+
+				const name = document.getElementById('name').value;
+  const fatherName = document.getElementById('father_name').value;
+  const phone = document.getElementById('phone').value;
+  const admissionNumber = document.getElementById('admission_number').value;
+  const studentClass = document.getElementById('class').value;
+  const busNumberSelect = document.getElementById('bus_number');
+  const busNumber = busNumberSelect.options[busNumberSelect.selectedIndex].value; // Get the selected bus number
+  const busRoute = document.getElementById('bus_route').value;
+  const feesPaid = document.getElementById('fees_paid').value;
+  const feesDue = document.getElementById('fees_due').value;
+  const dueDate = document.getElementById('due_date').value;
+  const totalFees = document.getElementById('total_fees').value;
+  const month=document.getElementById('month').value
+
+
+				const student = {
+					name,
+					month,
+					fatherName,
+					
+					phone,
+					admissionNumber,
+					studentClass,
+					busNumber,
+					busRoute,
+					feesPaid,
+					feesDue,
+					dueDate,
+					totalFees,
+
+				};
+				database.ref('students').push(student)
+					.then(() => {
+						alert('Student added successfully');
+						event.target.reset();
+						window.location.href = 'AllStudents.html';
+					})
+					.catch(error => {
+						console.error(error);
+						alert('Error adding student');
+					});
+			}
+			// Fetch bus numbers from the Firebase database and populate the dropdown
+function populateBusNumbers() {
+  const busNumberSelect = document.getElementById('bus_number');
+
+  // Clear the existing options
+  busNumberSelect.innerHTML = '<option value="">Select Bus Number</option>';
+
+  // Fetch bus numbers from the database
+  database.ref('buses').once('value')
+    .then(snapshot => {
+      snapshot.forEach(childSnapshot => {
+        const busData = childSnapshot.val();
+        const busNumber = busData.busNumber;
+
+        // Create an option element for each bus number
+        const option = document.createElement('option');
+        option.value = busNumber;
+        option.textContent = busNumber;
+
+        // Append the option to the select element
+        busNumberSelect.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+// Call the function to populate bus numbers
+populateBusNumbers();
+
+			const form = document.querySelector('form');
+			form.addEventListener('submit', addStudent);
+
+		</script>
+	</div>
+</body>
+<script>
+	function openNav() {
+		document.getElementById("mySidenav").style.width = "250px";
+	}
+	function closeNav() {
+		document.getElementById("mySidenav").style.width = "0";
+	}
+	function logout() {
+		firebase.auth().signOut()
+			.then(function () {
+				alert("Logged out successfully!");
+				window.location.href = "login.html";
+			})
+			.catch(function (error) {
+				alert("Error logging out: " + error.message);
+			});
+	}
+</script>
+
+</html>

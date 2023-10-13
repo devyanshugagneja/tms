@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Management System</title>
+    <link rel="stylesheet" href="editAdminInfo.css">
+</head>
+
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="adminInfo.html">My Info</a>
+        <a href="AllStudents.html">All Students</a>
+        <a href="BusNumber.html" class="navText">Add Bus</a>
+        <a href="ChangePassword.html">Change Password</a>
+        <a href="#" class="navText" onclick="logout()">Log Out</a>
+
+    </div>
+
+    <div class="top">
+        <div class="image header">
+            <img src="GIS Logo.png" alt="" onclick="openNav()" height="143px" width="140px" />
+        </div>
+        <div class="header welcomeText">
+            <div class="adminHeading">
+                <h2>Welcome, Admin!</h2>
+            </div>
+            <input type="text" placeholder="Search Here" width="100%" class="search" />
+        </div>
+    </div>
+
+    <h3>Edit Admin Information</h3>
+
+    <div class="adminEdit">
+        <form id="editAdminForm">
+            <div class="left">
+                <label for="name">Name:</label>
+                <input type="text" name="name" id="name" required><br>
+
+                <label for="gender">Gender:</label>
+                <select name="gender" id="gender" required>
+                    <option value="">--Select--</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select><br>
+
+                <label for="dateOfBirth">Date of Birth:</label>
+                <input type="date" name="dateOfBirth" id="dateOfBirth" required><br>
+
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required><br>
+
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" name="phoneNumber" id="phoneNumber" required><br>
+
+                <label for="cabinNumber">Cabin Number:</label>
+                <input type="text" name="cabinNumber" id="cabinNumber" required><br>
+            </div>
+
+          
+
+            <div class="clear">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyB1pTAijXc-6R2SewPxKEgmJzVsE6Y-KC4",
+  authDomain: "gyankalash-dbbdf.firebaseapp.com",
+  projectId: "gyankalash-dbbdf",
+  storageBucket: "gyankalash-dbbdf.appspot.com",
+  messagingSenderId: "950711044542",
+  appId: "1:950711044542:web:ab4ffcd60e99cbacf711ef",
+  measurementId: "G-SZ2FJ0S5L6"
+      };
+  
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to the admin section in the database
+        var adminRef = firebase.database().ref("admin");
+
+        // Retrieve the current admin information from the database
+        adminRef.once("value", function (snapshot) {
+            var adminData = snapshot.val();
+
+            // Pre-fill the form fields with the existing admin information
+            document.getElementById("name").value = adminData.name;
+            document.getElementById("gender").value = adminData.gender;
+            document.getElementById("dateOfBirth").value = adminData.dateOfBirth;
+            document.getElementById("email").value = adminData.email;
+            document.getElementById("phoneNumber").value = adminData.phoneNumber;
+            document.getElementById("cabinNumber").value = adminData.cabinNumber;
+        });
+
+        // Handle form submission
+        document.getElementById("editAdminForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Get the updated values from the form
+            var name = document.getElementById("name").value;
+            var gender = document.getElementById("gender").value;
+            var dateOfBirth = document.getElementById("dateOfBirth").value;
+            var email = document.getElementById("email").value;
+            var phoneNumber = document.getElementById("phoneNumber").value;
+            var cabinNumber = document.getElementById("cabinNumber").value;
+
+            // Update the admin information in the database
+            adminRef.update({
+                "name": name,
+                "gender": gender,
+                "dateOfBirth": dateOfBirth,
+                "email": email,
+                "phoneNumber": phoneNumber,
+                "cabinNumber": cabinNumber
+            }).then(function () {
+                alert("Admin information updated successfully!");
+            }).catch(function (error) {
+                console.error("Error updating admin information:", error);
+            });
+        });
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+        function logout() {
+            firebase.auth().signOut()
+              .then(function () {
+                // Sign out successful
+                alert("Logged out successfully!");
+                // Redirect to the login page or desired location
+                window.location.href = "login.html";
+              })
+              .catch(function (error) {
+                // Handle logout error
+                alert("Error logging out: " + error.message);
+              });
+          }
+    </script>
+</body>
+
+</html>

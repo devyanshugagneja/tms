@@ -1,0 +1,187 @@
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #145374;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;
+}
+.btn23{
+  margin-bottom: 20px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #818181;
+}
+
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  background-color: #145374;
+}
+
+.top {
+  width: 1330px;
+  height: 143px;
+  left: 288px;
+  top: 0px;
+
+  background: #145374;
+}
+
+.header {
+  float: left;
+}
+
+.adminHeading {
+  margin-left: 30px;
+}
+
+.search {
+  width: 1000px;
+  height: 30px;
+  margin-left: 30px;
+
+
+  background: #E8E8E8;
+  border-radius: 5px;
+}
+
+.welcomeText {
+  margin-top: -10px;
+  color: white;
+  margin-left: 100px;
+}
+
+h3{
+  width: 449px;
+height: 35px;
+left: 336px;
+top: 263px;
+margin-left: 600px;
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 30px;
+line-height: 36px;
+display: flex;
+align-items: center;
+text-align: center;
+color: #00334E;
+}
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #a8bcc7;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.left {
+  width: 45%;
+}
+
+.right {
+  width: 45%;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+form {
+  background-color: #A8BCC7;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.left {
+  flex: 1;
+  margin-left: 30px;
+  margin-top: 20px;
+}
+
+.right {
+  flex: 1;
+  margin-top: 20px;
+}
+
+form label,
+form input,
+form select {
+  font-size: 18px;
+  color: #00334E;
+}
+
+form button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  width: 90%;
+  padding: 6px;
+  margin-bottom: 10px;
+  border: none;
+}
+form {
+  background-color: #A8BCC7;
+}
+
+.submit {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+.print{
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.submit:hover {
+  opacity: 0.8;
+}
+/* editStudent.css */
+
+/* ...existing styles... */
+
+.left {
+  float: left;
+  width: 50%;
+}
+
+.right {
+  float: right;
+  width: 50%;
+}
+
+form {
+  overflow: hidden;
+}

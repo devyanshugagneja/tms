@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Management System</title>
+    <link rel="stylesheet" href="StudentInfo.css">
+</head>
+
+<body>
+   
+    <div class="top">
+        <div class="image header">
+            <img src="GIS Logo.png" height="143px" width="140px" />
+        </div>
+
+    </div>
+    <h3 class="stInfoText">Student Information</h3>
+    <div class="container">
+        <div class="adminDetails">
+            <p><b class="InputAdmin">Name :</b><span class="OutputAdmin" id="name"></span></p>
+            <p><b class="InputAdmin">Gender :</b><span class="OutputAdmin" id="gender"></span></p>
+            <p><b class="InputAdmin">Date of birth :</b><span class="OutputAdmin" id="dob"></span></p>
+            <p><b class="InputAdmin">Class :</b><span class="OutputAdmin" id="classNum"></span></p>
+            <p><b class="InputAdmin">Fees Paid :</b><span class="OutputAdmin" id="feesPaid"></span></p>
+            <p><b class="InputAdmin">Fees Due :</b><span class="OutputAdmin" id="feesDue"></span></p>
+            <p><b class="InputAdmin">Phone number :</b><span class="OutputAdmin" id="phoneNumber"></span></p>
+            <p><b class="InputAdmin">Father's Name :</b><span class="OutputAdmin" id="fatherName"></span></p>
+            <p><b class="InputAdmin">Bus Number :</b><span class="OutputAdmin" id="busNumber"></span></p>
+            <p><b class="InputAdmin">Bus Route :</b><span class="OutputAdmin" id="busRoute"></span></p>
+            <p><b class="InputAdmin">Serial Number:</b><span class="OutputAdmin" id="serialNumber"></span></p>
+
+            <div class="icons">
+            </div>
+            
+        </div>
+    </div>
+    <button onclick="printPage()" class="print-button"><span class="print-icon"></span></button>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1pTAijXc-6R2SewPxKEgmJzVsE6Y-KC4",
+            authDomain: "gyankalash-dbbdf.firebaseapp.com",
+            projectId: "gyankalash-dbbdf",
+            storageBucket: "gyankalash-dbbdf.appspot.com",
+            messagingSenderId: "950711044542",
+            appId: "1:950711044542:web:ab4ffcd60e99cbacf711ef",
+            measurementId: "G-SZ2FJ0S5L6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        const database = firebase.database();
+        // Get the student ID from the query parameter
+        const serialNumberRef = database.ref('serialNumber');
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const studenId = urlParams.get('id');
+
+        // Get a reference to the student node in the database
+        const studentRef = database.ref('students/' + studenId);
+
+        // Populate the form with the existing student data
+        studentRef.on('value', (snapshot) => {
+            const studentData = snapshot.val();
+
+            if (studentData) {
+                document.getElementById("name").textContent = studentData.name || "";
+                document.getElementById("gender").textContent = studentData.gender || "";
+                document.getElementById("dob").textContent = studentData.dob || "";
+                document.getElementById("classNum").textContent = studentData.studentClass || "";
+                document.getElementById("feesPaid").textContent = studentData.feesPaid || "";
+                document.getElementById("feesDue").textContent = studentData.feesDue || "";
+                document.getElementById("phoneNumber").textContent = studentData.phone || "";
+                document.getElementById("fatherName").textContent = studentData.fatherName || "";
+                document.getElementById("busNumber").textContent = studentData.busNumber || "";
+                document.getElementById("busRoute").textContent = studentData.busRoute || "";
+            } else {
+                alert('Student data not found.');
+                window.location.href = 'AllStudents.html';
+            }
+        });
+        function updateSerialNumber() {
+      serialNumberRef.transaction((currentSerialNumber) => {
+        return (currentSerialNumber || 0) + 1;
+      }, (error, committed, snapshot) => {
+        if (error) {
+          console.error('Failed to update serial number:', error);
+        } else if (committed) {
+          const serialNumber = snapshot.val();
+          document.getElementById("serialNumber").textContent = serialNumber;
+        }
+      });
+    }
+    function printPage() {
+      updateSerialNumber();
+      window.print();
+    }
+
+    // Set the initial serial number on page load
+    document.getElementById("serialNumber").textContent = 'Loading...';
+    serialNumberRef.on('value', (snapshot) => {
+      const serialNumber = snapshot.val();
+      document.getElementById("serialNumber").textContent = serialNumber;
+    });
+    </script>
+
+</body>
+
+</html>

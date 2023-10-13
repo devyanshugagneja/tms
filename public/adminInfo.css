@@ -1,0 +1,159 @@
+.admin{
+  background: #A8BCC7;
+  
+
+}
+.student{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 466px;
+height: 334px;
+left: 395px;
+top: 410px;
+margin-left: 20px;
+}
+.top{
+  width: 1350px;
+height: 143px;
+left: 288px;
+top: 0px;
+
+background: #145374;
+}
+.sidenav {
+    height: 100%;
+    width: 0; 
+    position: fixed; 
+    z-index: 1; 
+    top: 0; 
+    left: 0;
+    background-color: #145374; 
+    overflow-x: hidden; 
+    padding-top: 60px; 
+    transition: 0.5s; 
+  }
+  .welcomeText{
+    margin-top: -10px;
+    color: white;
+    margin-left: 100px;
+  }
+  .adminHeading{
+    margin-left: 30px;
+  }
+  .search{
+    width: 1000px;
+height: 30px;
+margin-left: 30px;
+
+
+background: #E8E8E8;
+border-radius: 5px;
+  }
+  .navText{
+    color: white;
+  }
+
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color:white ;
+    display: block;
+    transition: 0.3s;
+  }
+  .header{
+    float: left;
+  }
+  .sidenav a:hover {
+    color: #818181;
+  }
+  
+  
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    background-color: #145374;
+  }
+ .infoText{
+  width: 449px;
+  margin-left: 500px;
+height: 35px;
+left: 336px;
+top: 263px;
+text-align: center;
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 30px;
+line-height: 36px;
+display: flex;
+align-items: center;
+
+color: #00334E;
+  
+ }
+.info{
+  background-color: white;
+}  
+
+.adminDetails {
+  display: inline-block;
+  margin-left: 20px;
+  vertical-align: top;
+  margin-left: 200px;
+}
+.InputAdmin{
+ color: #00334E;
+ font-size: 20px;
+ line-height: 30px;
+}
+.OutputAdmin{
+  font-family: 'Inter';
+font-style: normal;
+color: #00334E;
+margin-left: 5px;
+}
+.edit{
+  width: 261px;
+height: 35px;
+left: 1094px;
+top: 936px;
+margin-top: 6px;
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 29px;
+display: flex;
+align-items: center;
+color: #00334E;
+margin-left: 3px;
+}
+.editClass,.deleteClass{
+  float: left;
+  margin-left: -15px;
+}
+.delete{
+  width: 261px;
+height: 35px;
+left: 1094px;
+top: 1006px;
+margin-top: 6px;
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 29px;
+display: flex;
+align-items: center;
+margin-left: 3px;
+color: #00334E;
+}
+ 
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }

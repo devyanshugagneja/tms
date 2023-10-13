@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Management System</title>
+    <link rel="stylesheet" href="PaymentHistory.css">
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="adminInfo.html">My Info</a>
+        <a href="AllStudents.html">All Students</a>
+        <a href="ChangePassword.html">Change Password</a>
+        <a href="#">Logout</a>
+    </div>
+    <div class="top">
+        <div class="image header">
+            <img src="GIS Logo.png" alt="" onclick="openNav()" height="143px" width="140px" />
+        </div>
+        <div class="header welcomeText">
+            <div class="adminHeading">
+                <h2>Welcome , Admin !</h2>
+            </div>
+            <input type="text" placeholder="Search Here" width="100%" class="search" />
+        </div>
+    </div>
+    <div class="paymentHeading">
+        <h3>Payment History</h3>
+        <p class="AdminInput">Name : <span class="AdminOutput">Devyanshu</span></p>
+        <p class="AdminInput">Adm No. : <span class="AdminOutput">221</span></p>
+        <p class="AdminInput">Class : <span class="AdminOutput">10</span></p>
+        <p class="AdminInput">Section : <span class="AdminOutput">B</span></p>
+    </div>
+    <div class="container">
+        <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Transport fees</td>
+                <td>Rs. 5000</td>
+                <td>7/12/2023</td>
+                <td>Successful</td>
+                <td><button>Download</button></td>
+              </tr>
+              <tr>
+                <td>Transport fees</td>
+                <td>Rs. 5000</td>
+                <td>7/12/2023</td>
+                <td>Successful</td>
+                <td><button>Download</button></td>
+              </tr>
+              <tr>
+                <td>Transport fees</td>
+                <td>Rs. 5000</td>
+                <td>7/12/2023</td>
+                <td>Successful</td>
+                <td><button>Download</button></td>
+              </tr>
+              <tr>
+                <td>Transport fees</td>
+                <td>Rs. 5000</td>
+                <td>7/12/2023</td>
+                <td>Successful</td>
+                <td><button>Download</button></td>
+              </tr>
+              <tr>
+                <td>Transport fees</td>
+                <td>Rs. 5000</td>
+                <td>7/12/2023</td>
+                <td>Successful</td>
+                <td><button>Download</button></td>
+              </tr>
+              <tr>
+                <td>Transport fees</td>
+                <td>Rs. 5000</td>
+                <td>7/12/2023</td>
+                <td>Successful</td>
+                <td><button>Download</button></td>
+              </tr>
+              <tr>
+                <td>Transport fees</td>
+                <td>Rs. 5000</td>
+                <td>7/12/2023</td>
+                <td>Successful</td>
+                <td><button>Download</button></td>
+              </tr>
+            </tbody>
+          </table>
+          
+    </div>
+</body>
+<script>
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+    }
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+  </script>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transport Management System</title>
+	<link rel="stylesheet" href="AllStudents.css">
+</head>
+
+<body>
+	<div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="adminInfo.html" class="navText">My Info</a>
+		<a href="AllStudents.html" class="navText">All Students</a>
+		<a href="BusNumber.html" class="navText">Add Bus</a>
+		<a href="ChangePassword.html" class="navText">Change Password</a>
+		<a href="#" class="navText" onclick="logout()">Log Out</a>
+
+	</div>
+
+	<div class="top">
+		<div class="image header">
+			<img src="GIS Logo.png" alt="" onclick="openNav()" height="143px" width="140px" />
+		</div>
+		<div class="header welcomeText">
+			<div class="adminHeading">
+				<h2>Welcome, Admin!</h2>
+			</div>
+			<input type="text" placeholder="Search Here" width="100%" class="search" id="searchBox"
+				oninput="searchStudents()" />
+			<!-- Add this select element -->
+
+			<div class="busslist">
+				<!-- Add this select element -->
+				<select class="filter" id="busFilter" onchange="filterStudentsByBus()">
+					<option value="" selected>All Bus Numbers</option>
+				</select>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<h3>All Students information</h3>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Adm. Number</th>
+				<th>Name</th>
+				<th>Month</th>
+				<th>Contact</th>
+				<th>Class</th>
+				<th>Bus Number</th>
+				<th>Fees Paid</th>
+				<th>Fees Due</th>
+				<th>Fees</th>
+				<th>Due Date</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody id="studentList">
+			<!-- Data will be populated here -->
+		</tbody>
+	</table>
+	<a href="AddStudent.html" class="add-student"><img src="add Student icon.png" alt="Add Student" height="70px"
+			width="70px"></a>
+
+	<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+	<script>
+		const firebaseConfig = {
+			apiKey: "AIzaSyB1pTAijXc-6R2SewPxKEgmJzVsE6Y-KC4",
+			authDomain: "gyankalash-dbbdf.firebaseapp.com",
+			projectId: "gyankalash-dbbdf",
+			storageBucket: "gyankalash-dbbdf.appspot.com",
+			messagingSenderId: "950711044542",
+			appId: "1:950711044542:web:ab4ffcd60e99cbacf711ef",
+			measurementId: "G-SZ2FJ0S5L6"
+		};
+
+		firebase.initializeApp(firebaseConfig);
+
+		// Get a reference to the database
+		const database = firebase.database();
+
+		// Function to retrieve data from the database and display it in the HTML table
+		const displayStudentList = () => {
+			const currentDate = new Date();
+			const currentMonth = currentDate.getMonth() + 1;
+			const studentList = document.getElementById("studentList");
+			studentList.innerHTML = '';
+
+			const studentRef = database.ref('students');
+			studentRef.orderByChild('admissionNumber').once('value') // Order the data by admissionNumber
+				.then((snapshot) => {
+
+					let totalFeesPaid = 0;
+					let totalFeesDue = 0;
+
+					snapshot.forEach((childSnapshot) => {
+
+						const childData = childSnapshot.val();
+						const tr = document.createElement("tr");
+
+						const admNo = document.createElement("td");
+						admNo.innerHTML = childData.admissionNumber;
+
+						tr.appendChild(admNo);
+
+						const name = document.createElement("td");
+						name.innerHTML = childData.name;
+						tr.appendChild(name);
+
+						const month = document.createElement("td");
+						month.innerHTML = childData.month;
+						tr.appendChild(month);
+
+						const contact = document.createElement("td");
+						contact.innerHTML = childData.phone;
+						tr.appendChild(contact);
+
+						const classNum = document.createElement("td");
+						classNum.innerHTML = childData.studentClass;
+						tr.appendChild(classNum);
+
+						const busNo = document.createElement("td");
+						busNo.innerHTML = childData.busNumber;
+						tr.appendChild(busNo);
+
+						const feesPaid = document.createElement("td");
+						feesPaid.innerHTML = childData.feesPaid;
+						tr.appendChild(feesPaid);
+
+
+						feesPaid.innerHTML = childData.feesPaid;
+						tr.appendChild(feesPaid);
+
+						const feesDue = document.createElement("td");
+						feesDue.innerHTML = parseInt(childData.feesDue);
+						tr.appendChild(feesDue);
+
+						const totalFees = document.createElement("td");
+						totalFees.innerHTML = parseInt(childData.totalFees);
+						tr.appendChild(totalFees);
+
+						const dueDate = document.createElement("td");
+						dueDate.innerHTML = childData.dueDate;
+						tr.appendChild(dueDate);
+						totalFeesPaid += parseInt(childData.feesPaid);
+						totalFeesDue += parseInt(childData.feesDue);
+
+						const actions = document.createElement("td");
+						const openEditWindow = (studentId) => {
+							// Redirect to the EditStudent.html page with the student ID as a query parameter
+							window.location.href = `EditStudent.html?id=${studentId}`;
+						};
+						const openprint = (studentId) => {
+							// Redirect to the EditStudent.html page with the student ID as a query parameter
+							window.location.href = `StudentInfo.html?id=${studentId}`;
+						};
+						// Edit icon
+						const editIcon = document.createElement("img");
+						editIcon.src = "edit_icon.png";
+						editIcon.alt = "Edit";
+						editIcon.classList.add("action-icon");
+						editIcon.style.width = "50px"; // Set width to 50 pixels
+						editIcon.style.height = "50px"; // Set height to 50 pixels
+						editIcon.addEventListener("click", () => {
+							const studentId = childSnapshot.key;
+							openEditWindow(studentId);
+						});
+						actions.appendChild(editIcon);
+
+						// Delete icon
+						const deleteIcon = document.createElement("img");
+						deleteIcon.src = "delete_icon.png";
+						deleteIcon.alt = "Delete";
+						deleteIcon.classList.add("action-icon");
+						deleteIcon.style.width = "50px"; // Set width to 50 pixels
+						deleteIcon.style.height = "50px"; // Set height to 50 pixels
+						deleteIcon.addEventListener("click", () => {
+							const confirmation = confirm("Do you really want to delete this student?");
+							if (confirmation) {
+								// Delete the student from the database
+								const studentId = childSnapshot.key;
+								database.ref(`students/${studentId}`).remove()
+									.then(() => {
+										// Delete the student from the webpage
+										tr.remove();
+										alert("Student deleted successfully.");
+									})
+									.catch((error) => {
+										console.error("Error deleting student:", error);
+									});
+							}
+						});
+						actions.appendChild(deleteIcon);
+
+						const printicon = document.createElement("img");
+						printicon.src = "print.png";
+						printicon.alt = "print";
+						printicon.classList.add("action-icon");
+						printicon.style.width = "50px"; // Set width to 50 pixels
+						printicon.style.height = "50px"; // Set height to 50 pixels
+						printicon.addEventListener("click", () => {
+							const studentId = childSnapshot.key;
+							openprint(studentId);
+						});
+						actions.appendChild(printicon);
+
+						tr.appendChild(actions);
+						studentList.appendChild(tr);
+
+
+					});
+					const totalRow = document.createElement("tr");
+					totalRow.classList.add("total-row");
+					const totalLabelCell = document.createElement("td");
+					totalLabelCell.colSpan = 5;
+					totalLabelCell.textContent = "Total";
+
+					const totalFeesPaidCell = document.createElement("td");
+					totalFeesPaidCell.textContent = totalFeesPaid;
+
+					const totalFeesDueCell = document.createElement("td");
+					totalFeesDueCell.textContent = totalFeesDue;
+
+					const emptyCell = document.createElement("td");
+					emptyCell.colSpan = 8;
+					totalRow.appendChild(emptyCell);
+					totalRow.appendChild(totalLabelCell);
+					totalRow.appendChild(emptyCell);
+					totalRow.appendChild(emptyCell);
+					totalRow.appendChild(emptyCell);
+					totalRow.appendChild(totalFeesPaidCell);
+					totalRow.appendChild(totalFeesDueCell);
+					totalRow.appendChild(emptyCell);
+					studentList.appendChild(totalRow);
+				})
+				.catch((error) => {
+					console.error("Error fetching student data:", error);
+				});
+
+		};
+
+		//displayStudentList();
+
+
+
+		function logout() {
+			firebase.auth().signOut()
+				.then(function () {
+					// Sign out successful
+					alert("Logged out successfully!");
+					// Redirect to the login page or desired location
+					window.location.href = "login.html";
+				})
+				.catch(function (error) {
+					// Handle logout error
+					alert("Error logging out: " + error.message);
+				});
+		}
+		// Function to populate the bus number filter dropdown
+		const populateBusFilterDropdown = () => {
+			const busFilter = document.getElementById("busFilter");
+			const studentRef = database.ref('students');
+			const uniqueBusNumbers = new Set();
+
+			studentRef.once('value')
+				.then((snapshot) => {
+					snapshot.forEach((childSnapshot) => {
+						const childData = childSnapshot.val();
+						uniqueBusNumbers.add(childData.busNumber);
+					});
+
+					// Populate the dropdown with unique bus numbers
+					uniqueBusNumbers.forEach((busNumber) => {
+						const option = document.createElement("option");
+						option.value = busNumber;
+						option.textContent = busNumber;
+						busFilter.appendChild(option);
+					});
+				})
+				.catch((error) => {
+					console.error("Error populating bus number filter dropdown:", error);
+				});
+		};
+
+		// Function to filter students based on the selected bus number
+		const filterStudentsByBus = () => {
+			const busFilter = document.getElementById("busFilter");
+			const selectedBusNumber = busFilter.value;
+			const studentList = document.getElementById("studentList");
+			studentList.innerHTML = '';
+
+			const studentRef = database.ref('students');
+
+			if (selectedBusNumber) {
+				studentRef.orderByChild('busNumber').equalTo(selectedBusNumber).once('value')
+					.then((snapshot) => {
+						snapshot.forEach((childSnapshot) => {
+							const childData = childSnapshot.val();
+							const tr = document.createElement("tr");
+
+							const admNo = document.createElement("td");
+							admNo.textContent = childData.admissionNumber;
+							tr.appendChild(admNo);
+
+							const month = document.createElement("td");
+							month.innerHTML = childData.month;
+							tr.appendChild(month);
+
+							const name = document.createElement("td");
+							name.textContent = childData.name;
+							tr.appendChild(name);
+
+
+							const contact = document.createElement("td");
+							contact.innerHTML = childData.phone;
+							tr.appendChild(contact);
+
+							const classNum = document.createElement("td");
+							classNum.textContent = childData.studentClass;
+							tr.appendChild(classNum);
+
+							const busNo = document.createElement("td");
+							busNo.textContent = childData.busNumber;
+							tr.appendChild(busNo);
+
+							const feesPaid = document.createElement("td");
+							feesPaid.textContent = childData.feesPaid;
+							tr.appendChild(feesPaid);
+
+							const feesDue = document.createElement("td");
+							feesDue.textContent = childData.feesDue;
+							tr.appendChild(feesDue);
+
+							const totalFees = document.createElement("td");
+							totalFees.innerHTML = parseInt(childData.totalFees);
+							tr.appendChild(totalFees);
+
+							const dueDate = document.createElement("td");
+							dueDate.textContent = childData.dueDate;
+							tr.appendChild(dueDate);
+
+							const actions = document.createElement("td");
+							const openEditWindow = (studentId) => {
+								// Redirect to the EditStudent.html page with the student ID as a query parameter
+								window.location.href = `EditStudent.html?id=${studentId}`;
+							};
+							const openprint = (studentId) => {
+								// Redirect to the EditStudent.html page with the student ID as a query parameter
+								window.location.href = `StudentInfo.html?id=${studentId}`;
+							};
+							const editIcon = document.createElement("img");
+							editIcon.src = "edit_icon.png";
+							editIcon.alt = "Edit";
+							editIcon.classList.add("action-icon");
+							editIcon.style.width = "50px"; // Set width to 50 pixels
+							editIcon.style.height = "50px"; // Set height to 50 pixels
+							editIcon.addEventListener("click", () => {
+								const studentId = childSnapshot.key;
+								openEditWindow(studentId);
+							});
+							actions.appendChild(editIcon);
+							actions.appendChild(editIcon);
+
+							const deleteIcon = document.createElement("img");
+							deleteIcon.src = "delete_icon.png";
+							deleteIcon.alt = "Delete";
+							deleteIcon.classList.add("action-icon");
+							deleteIcon.style.width = "50px"; // Set width to 50 pixels
+							deleteIcon.style.height = "50px"; // Set height to 50 pixels
+							deleteIcon.addEventListener("click", () => {
+								const confirmation = confirm("Do you really want to delete this student?");
+								if (confirmation) {
+									// Delete the student from the database
+									const studentId = childSnapshot.key;
+									database.ref(`students/${studentId}`).remove()
+										.then(() => {
+											// Delete the student from the webpage
+											tr.remove();
+											alert("Student deleted successfully.");
+										})
+										.catch((error) => {
+											console.error("Error deleting student:", error);
+										});
+								}
+							});
+							actions.appendChild(deleteIcon);
+							const printicon = document.createElement("img");
+							printicon.src = "print.png";
+							printicon.alt = "print";
+							printicon.classList.add("action-icon");
+							printicon.style.width = "50px"; // Set width to 50 pixels
+							printicon.style.height = "50px"; // Set height to 50 pixels
+							printicon.addEventListener("click", () => {
+								const studentId = childSnapshot.key;
+								openprint(studentId);
+							});
+							actions.appendChild(printicon);
+							tr.appendChild(actions);
+							studentList.appendChild(tr);
+						});
+					})
+					.catch((error) => {
+						console.error("Error filtering students by bus number:", error);
+					});
+			} else {
+				// If no bus number is selected, display all students
+				displayStudentList();
+			}
+		};
+
+
+		populateBusFilterDropdown();
+		filterStudentsByBus();
+		// Function to search for students based on admission number
+		const searchStudents = () => {
+			const searchBox = document.getElementById("searchBox");
+			const searchText = searchBox.value.trim().toLowerCase();
+
+			const studentList = document.getElementById("studentList");
+			studentList.innerHTML = '';
+
+			const studentRef = database.ref('students');
+			studentRef.orderByChild('admissionNumber').startAt(searchText).endAt(searchText + "\uf8ff").once('value') // Order the data by admissionNumber and perform search
+				.then((snapshot) => {
+					snapshot.forEach((childSnapshot) => {
+						const childData = childSnapshot.val();
+						const tr = document.createElement("tr");
+
+						const admNo = document.createElement("td");
+						admNo.innerHTML = childData.admissionNumber;
+						tr.appendChild(admNo);
+
+						const name = document.createElement("td");
+						name.innerHTML = childData.name;
+						tr.appendChild(name);
+
+						const month = document.createElement("td");
+						month.innerHTML = childData.month;
+						tr.appendChild(month);
+
+						const contact = document.createElement("td");
+						contact.innerHTML = childData.phone;
+						tr.appendChild(contact);
+
+						const classNum = document.createElement("td");
+						classNum.innerHTML = childData.studentClass;
+						tr.appendChild(classNum);
+
+						const busNo = document.createElement("td");
+						busNo.innerHTML = childData.busNumber;
+						tr.appendChild(busNo);
+
+						const feesPaid = document.createElement("td");
+						feesPaid.innerHTML = childData.feesPaid;
+						tr.appendChild(feesPaid);
+
+						const feesDue = document.createElement("td");
+						feesDue.innerHTML = childData.feesDue;
+						tr.appendChild(feesDue);
+
+						const totalFees = document.createElement("td");
+						totalFees.innerHTML = parseInt(childData.totalFees);
+						tr.appendChild(totalFees);
+
+						const dueDate = document.createElement("td");
+						dueDate.innerHTML = childData.dueDate;
+						tr.appendChild(dueDate);
+
+						const actions = document.createElement("td");
+						const openEditWindow = (studentId) => {
+							// Redirect to the EditStudent.html page with the student ID as a query parameter
+							window.location.href = `EditStudent.html?id=${studentId}`;
+						};
+						const openprint = (studentId) => {
+							// Redirect to the EditStudent.html page with the student ID as a query parameter
+							window.location.href = `StudentInfo.html?id=${studentId}`;
+						};
+						// Edit icon
+						const editIcon = document.createElement("img");
+						editIcon.src = "edit_icon.png";
+						editIcon.alt = "Edit";
+						editIcon.classList.add("action-icon");
+						editIcon.style.width = "50px"; // Set width to 50 pixels
+						editIcon.style.height = "50px"; // Set height to 50 pixels
+						editIcon.addEventListener("click", () => {
+							const studentId = childSnapshot.key;
+							openEditWindow(studentId);
+						});
+						actions.appendChild(editIcon);
+
+						// Delete icon
+						const deleteIcon = document.createElement("img");
+						deleteIcon.src = "delete_icon.png";
+						deleteIcon.alt = "Delete";
+						deleteIcon.classList.add("action-icon");
+						deleteIcon.style.width = "50px"; // Set width to 50 pixels
+						deleteIcon.style.height = "50px"; // Set height to 50 pixels
+						deleteIcon.addEventListener("click", () => {
+							const confirmation = confirm("Do you really want to delete this student?");
+							if (confirmation) {
+								// Delete the student from the database
+								const studentId = childSnapshot.key;
+								database.ref(`students/${studentId}`).remove()
+									.then(() => {
+										// Delete the student from the webpage
+										tr.remove();
+										alert("Student deleted successfully.");
+									})
+									.catch((error) => {
+										console.error("Error deleting student:", error);
+									});
+							}
+						});
+						actions.appendChild(deleteIcon);
+
+						const printicon = document.createElement("img");
+						printicon.src = "print.png";
+						printicon.alt = "print";
+						printicon.classList.add("action-icon");
+						printicon.style.width = "50px"; // Set width to 50 pixels
+						printicon.style.height = "50px"; // Set height to 50 pixels
+						printicon.addEventListener("click", () => {
+							const studentId = childSnapshot.key;
+							openprint(studentId);
+						});
+						actions.appendChild(printicon);
+
+						tr.appendChild(actions);
+						studentList.appendChild(tr);
+
+
+					});
+				})
+				.catch((error) => {
+					console.error("Error searching for students:", error);
+				});
+		};
+		const updateFeesOnceADay = () => {
+			const currentDate = new Date();
+			const lastUpdatedDate = localStorage.getItem('lastUpdatedDate');
+
+			// Compare the current date with the last updated date
+			if (currentDate.getDate() === 1 && currentDate.toLocaleDateString() !== lastUpdatedDate) {
+				const studentRef = database.ref('students');
+				studentRef.once('value')
+					.then((snapshot) => {
+						snapshot.forEach((childSnapshot) => {
+							const childData = childSnapshot.val();
+							const studentId = childSnapshot.key;
+
+							// Calculate new feesDue by adding totalFees to feesDue
+							const newFeesDue = parseInt(childData.feesDue) + parseInt(childData.totalFees);
+
+							// Update feesDue in the database
+							database.ref(`students/${studentId}/feesDue`).set(newFeesDue)
+								.then(() => {
+									// Update feesDue in the webpage
+									const feesDueElement = document.getElementById(`feesDue-${studentId}`);
+									feesDueElement.innerHTML = newFeesDue;
+								})
+								.catch((error) => {
+									console.error(`Error updating feesDue for student ${studentId}:`, error);
+								});
+						});
+
+						// Store the current date as the last updated date in local storage
+						localStorage.setItem('lastUpdatedDate', currentDate.toLocaleDateString());
+					})
+					.catch((error) => {
+						console.error("Error fetching student data:", error);
+					});
+			}
+		};
+
+		displayStudentList();
+		updateFeesOnceADay();
+
+		const monthInput = document.createElement("td");
+		const monthTextArea = document.createElement("textarea");
+		monthTextArea.rows = "1"; // Set the number of rows for the text area
+		monthTextArea.addEventListener("blur", () => {
+			const newMonth = monthTextArea.value;
+			updateMonthData(childSnapshot.key, newMonth); // Update the month data
+		});
+
+		monthInput.appendChild(monthTextArea);
+		tr.appendChild(monthInput);
+		// ...
+
+		const updateMonthData = (studentKey, selectedMonth) => {
+			const studentRef = database.ref(`students/${studentKey}`);
+			studentRef.update({ month: selectedMonth }); // Save the month data
+		};
+
+
+
+	</script>
+</body>
+<script>
+	function openNav() {
+		document.getElementById("mySidenav").style.width = "250px";
+	}
+
+	function closeNav() {
+		document.getElementById("mySidenav").style.width = "0";
+	}
+</script>
+
+</html>

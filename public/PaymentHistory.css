@@ -1,0 +1,111 @@
+.sidenav {
+    height: 100%;
+    width: 0; 
+    position: fixed; 
+    z-index: 1; 
+    top: 0; 
+    left: 0;
+    background-color: #145374; 
+    overflow-x: hidden; 
+    padding-top: 60px; 
+    transition: 0.5s; 
+  }
+  
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color:white ;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .sidenav a:hover {
+    color: #818181;
+  }
+  
+
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    background-color: #145374;
+  }
+  .top{
+    width: 1330px;
+  height: 143px;
+  left: 288px;
+  top: 0px;
+  
+  background: #145374;
+  }
+  .header{
+    float: left;
+  }
+  .adminHeading{
+    margin-left: 30px;
+  }
+  .search{
+    width: 1000px;
+height: 30px;
+margin-left: 30px;
+
+
+background: #E8E8E8;
+border-radius: 5px;
+  }
+  .welcomeText{
+    margin-top: -10px;
+    color: white;
+    margin-left: 100px;
+  }
+  h3{
+    width: 449px;
+height: 35px;
+left: 336px;
+top: 282px;
+margin-left: 500px;
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 40px;
+line-height: 48px;
+display: flex;
+align-items: center;
+
+color: #00334E;
+  }
+  .AdminInput{
+   
+margin-left: 500px;
+font-family: 'Inter';
+font-style: normal;
+
+
+
+color: #00334E;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #A8BCC7;
+    margin: 15px;
+  }
+  
+  table {
+    margin: 0 auto;
+  }
+  
+
+  table td, table th {
+    padding: 20px;
+  }
+   
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }

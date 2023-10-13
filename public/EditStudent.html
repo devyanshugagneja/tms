@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transport Management System - Edit Student</title>
+  <link rel="stylesheet" href="editStudent.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+  <div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="adminInfo.html" class="navText">My Info</a>
+		<a href="AllStudents.html" class="navText">All Students</a>
+    <a href="BusNumber.html" class="navText">Add Bus</a>
+		<a href="ChangePassword.html" class="navText">Change Password</a>
+    <a href="#" class="navText" onclick="logout()">Log Out</a>
+
+	</div>
+
+	<div class="top">
+		<div class="image header">
+			<img src="GIS Logo.png" alt="" onclick="openNav()" height="143px" width="140px" />
+		</div>
+		<div class="header welcomeText">
+			<div class="adminHeading">
+				<h2>Welcome, Admin!</h2>
+			</div>
+			<input type="text" placeholder="Search Here" width="100%" class="search" id="searchBox" oninput="searchStudents()" />
+		</div>
+	</div>
+
+	<h3>Edit Student Details</h3>
+
+	<form id="editForm">
+    <div class="left">
+		<label for="admissionNumber">Admission Number:</label>
+		<input type="text" id="admissionNumber" name="admissionNumber" readonly>
+
+		<label for="name">Name:</label>
+		<input type="text" id="name" name="name">
+
+		<label for="fatherName">Father's Name:</label>
+		<input type="text" id="fatherName" name="fatherName">
+
+
+		<label for="phone">Contact:</label>
+		<input type="text" id="phone" name="phone">
+ 
+    <label for="studentClass">Class:</label>
+		<input type="text" id="studentClass" name="studentClass">
+    <label for="total_fees">Fees :</label>
+		<input type="text" id="total_fees" name="total_fees">
+    <button type="submit" class="btn23">Save Changes</button>
+  </div>
+  <div class="right">
+
+
+    <label for="busNumber">Bus Number:</label>
+    <select id="busNumber" name="busNumber" required>
+      <option value="">Select Bus Number</option>
+    </select>
+    
+
+		<label for="busRoute">Bus Route:</label>
+		<input type="text" id="busRoute" name="busRoute">
+
+		<label for="feesPaid">Fees Paid:</label>
+		<input type="text" id="feesPaid" name="feesPaid">
+
+		<label for="feesDue">Fees Due:</label>
+		<input type="text" id="feesDue" name="feesDue">
+
+
+
+
+		<label for="dueDate">Due Date:</label>
+		<input type="date" id="dueDate" name="dueDate">
+
+    		<label for="name">Month</label>
+		<input type="text" id="month" name="month">
+
+    <!--<button type="button" id="printt" class="print">Print</button> -->
+  </div>
+	</form>
+    
+	<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+  <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<!-- PrintThis Js -->
+<script type="text/javascript" src="printThis.js"></script>
+<script src="custom.js"></script>
+
+	<script>
+		const firebaseConfig = {
+      apiKey: "AIzaSyB1pTAijXc-6R2SewPxKEgmJzVsE6Y-KC4",
+  authDomain: "gyankalash-dbbdf.firebaseapp.com",
+  projectId: "gyankalash-dbbdf",
+  storageBucket: "gyankalash-dbbdf.appspot.com",
+  messagingSenderId: "950711044542",
+  appId: "1:950711044542:web:ab4ffcd60e99cbacf711ef",
+  measurementId: "G-SZ2FJ0S5L6"
+		};
+
+		firebase.initializeApp(firebaseConfig);
+
+		// Get a reference to the database
+		const database = firebase.database();
+
+// Get the student ID from the query parameter
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const studentId = urlParams.get('id');
+
+// Get a reference to the student node in the database
+const studentRef = database.ref('students/' + studentId);
+
+// Populate the form with the existing student data
+studentRef.on('value', (snapshot) => {
+  const studentData = snapshot.val();
+
+  if (studentData) {
+    document.getElementById('admissionNumber').value = studentData.admissionNumber;
+    document.getElementById('name').value = studentData.name;
+    document.getElementById('fatherName').value = studentData.fatherName;
+    document.getElementById('month').value=studentData.month;
+    document.getElementById('phone').value = studentData.phone;
+    document.getElementById('studentClass').value = studentData.studentClass;
+    document.getElementById('busNumber').value = studentData.busNumber;
+    document.getElementById('busRoute').value = studentData.busRoute;
+    document.getElementById('feesPaid').value = studentData.feesPaid;
+    document.getElementById('feesDue').value = studentData.feesDue;
+    document.getElementById('dueDate').value = studentData.dueDate;
+    document.getElementById('total_fees').value=studentData.totalFees;
+  } else {
+    alert('Student data not found.');
+    window.location.href = 'AllStudents.html';
+  }
+});
+
+// Handle the form submission
+document.getElementById('editForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  // Get the updated form data
+  const updatedStudent = {
+    name: document.getElementById('name').value,
+    month: document.getElementById('month').value,
+    fatherName: document.getElementById('fatherName').value,
+    motherName: document.getElementById('motherName').value,
+    dob: document.getElementById('dob').value,
+    gender: document.getElementById('gender').value,
+    phone: document.getElementById('phone').value,
+    studentClass: document.getElementById('studentClass').value,
+    busNumber: document.getElementById('busNumber').value,
+    busRoute: document.getElementById('busRoute').value,
+    feesPaid: document.getElementById('feesPaid').value,
+    feesDue: document.getElementById('feesDue').value,
+    dueDate: document.getElementById('dueDate').value,
+    totalFees: document.getElementById('total_fees').value
+  };
+
+  // Update the student data in the database
+  studentRef.update(updatedStudent)
+    .then(() => {
+      alert('Student details updated successfully.');
+      window.location.href = 'AllStudents.html';
+    })
+    .catch((error) => {
+      console.error('Error updating student details:', error);
+    });
+});
+// Fetch bus numbers from the Firebase database and populate the dropdown
+function populateBusNumbers() {
+  const busNumberSelect = document.getElementById('busNumber');
+
+  // Clear the existing options
+  busNumberSelect.innerHTML = '<option value="">Select Bus Number</option>';
+
+  // Fetch bus numbers from the database
+  database.ref('buses').once('value')
+    .then(snapshot => {
+      snapshot.forEach(childSnapshot => {
+        const busData = childSnapshot.val();
+        const busNumber = busData.busNumber;
+
+        // Create an option element for each bus number
+        const option = document.createElement('option');
+        option.value = busNumber;
+        option.textContent = busNumber;
+
+        // Append the option to the select element
+        busNumberSelect.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+// Call the function to populate bus numbers
+populateBusNumbers();
+
+</script>
+<script>
+  function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+  }
+
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+  }
+  function logout() {
+    firebase.auth().signOut()
+      .then(function () {
+        // Sign out successful
+        alert("Logged out successfully!");
+        // Redirect to the login page or desired location
+        window.location.href = "login.html";
+      })
+      .catch(function (error) {
+        // Handle logout error
+        alert("Error logging out: " + error.message);
+      });
+  }
+</script>
+<script>
+
+    
+  var serialNumber=0;
+    function printReceipt() {
+      serialNumber++;
+      var jsPDFInstance = new jsPDF();
+
+      var admissionNumber = document.getElementById('admissionNumber').value;
+      var name = document.getElementById('name').value;
+      var fatherName = document.getElementById('fatherName').value;
+      var motherName = document.getElementById('motherName').value;
+      var dob = document.getElementById('dob').value;
+      var gender = document.getElementById('gender').value;
+      var phone = document.getElementById('phone').value;
+      var studentClass = document.getElementById('studentClass').value;
+      var busNumber = document.getElementById('busNumber').value;
+      var busRoute = document.getElementById('busRoute').value;
+      var feesPaid = document.getElementById('feesPaid').value;
+      var feesDue = document.getElementById('feesDue').value;
+      var dueDate = document.getElementById('dueDate').value;
+      var totalFees = document.getElementById('total_fees').value;
+
+      // Generate the content of the receipt
+      var receiptContent = 'Serial Number: ' + serialNumber + '\n\n';
+      receiptContent += 'Admission Number: ' + admissionNumber + '\n';
+      receiptContent += 'Name: ' + name + '\n';
+      receiptContent += 'Father\'s Name: ' + fatherName + '\n';
+      receiptContent += 'Mother\'s Name: ' + motherName + '\n';
+      receiptContent += 'Date of Birth: ' + dob + '\n';
+      receiptContent += 'Gender: ' + gender + '\n';
+      receiptContent += 'Contact: ' + phone + '\n';
+      receiptContent += 'Class: ' + studentClass + '\n';
+      receiptContent += 'Bus Number: ' + busNumber + '\n';
+      receiptContent += 'Bus Route: ' + busRoute + '\n';
+      receiptContent += 'Fees Paid: ' + feesPaid + '\n';
+      receiptContent += 'Fees Due: ' + feesDue + '\n';
+      receiptContent += 'Due Date: ' + dueDate + '\n';
+      receiptContent += 'Total Fees: ' + totalFees;
+
+      // Print the receipt
+      jsPDFInstance.text(receiptContent, 10, 10);
+
+      // Save the PDF file
+      jsPDFInstance.save('receipt.pdf');
+    }
+
+  
+</script>
+
+<script>
+  function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+  }
+
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+  }
+</script>
+</body>
+</html>
